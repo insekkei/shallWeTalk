@@ -28,10 +28,6 @@ class App extends Component {
     })
   }
 
-  componentDidUpdate () {
-    this.mainPanel.scrollIntoView({behavior: 'smooth', block: 'end'})
-  }
-
   fetchData = () => {
     fetch('http://insekkei.com/bookcat/books/books.json').then((res) => {
       Promise.resolve(res.json()).then(result => {
@@ -67,6 +63,7 @@ class App extends Component {
     ]
     this.setState({talkList})
     this.updateLocalStorage(talkList)
+    this.mainPanel.scrollIntoView({behavior: 'smooth', block: 'end'})
   }
 
   clearTalk = () => {
@@ -84,6 +81,10 @@ class App extends Component {
     this.setState({
       inputText: e.target.value
     })
+  }
+
+  onFocus = () => {
+    this.input.scrollIntoView({behavior: 'smooth', block: 'end'})
   }
 
   onKeyPress = e => {
@@ -105,6 +106,7 @@ class App extends Component {
           }, () => {
             this.timer = setTimeout(() => {
               this.updateOutputContent(value)
+              this.mainPanel.scrollIntoView({behavior: 'smooth', block: 'end'})
             }, 1000)
           })
           this.updateLocalStorage(talkList)
@@ -139,7 +141,9 @@ class App extends Component {
         <span className='ClearTalk' onClick={this.clearTalk}>清除</span>
         <div className='BottomBar'>
           <input value={inputText}
+            ref={el => { this.input = el }}
             className='SearchInput'
+            onFocus={this.onFocus}
             onKeyPress={this.onKeyPress}
             onChange={this.onChange}
           />
